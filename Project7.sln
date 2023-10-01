@@ -1,31 +1,104 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.7.34031.279
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Project7", "Project7\Project7.vcxproj", "{3AA73FA1-C152-4098-BF9A-993E7DB94DE0}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3AA73FA1-C152-4098-BF9A-993E7DB94DE0}.Debug|x64.ActiveCfg = Debug|x64
-		{3AA73FA1-C152-4098-BF9A-993E7DB94DE0}.Debug|x64.Build.0 = Debug|x64
-		{3AA73FA1-C152-4098-BF9A-993E7DB94DE0}.Debug|x86.ActiveCfg = Debug|Win32
-		{3AA73FA1-C152-4098-BF9A-993E7DB94DE0}.Debug|x86.Build.0 = Debug|Win32
-		{3AA73FA1-C152-4098-BF9A-993E7DB94DE0}.Release|x64.ActiveCfg = Release|x64
-		{3AA73FA1-C152-4098-BF9A-993E7DB94DE0}.Release|x64.Build.0 = Release|x64
-		{3AA73FA1-C152-4098-BF9A-993E7DB94DE0}.Release|x86.ActiveCfg = Release|Win32
-		{3AA73FA1-C152-4098-BF9A-993E7DB94DE0}.Release|x86.Build.0 = Release|Win32
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {ACF8CA68-2BE7-4E77-8ADB-756C350D5135}
-	EndGlobalSection
-EndGlobal
+﻿#include <iostream>
+using namespace std;
+
+// Функція для перевірки належності точки до площини
+bool checkPointInPlane(double A, double B, double C, double D, double x, double y, double z) {
+    double result = A * x + B * y + C * z + D;
+    return result == 0;
+}
+
+// Функція для знаходження проекції точки на площину
+void projectPointToPlane(double A, double B, double C, double D, double x, double y, double z, double &projX, double &projY, double &projZ) {
+    double denominator = A * A + B * B + C * C;
+    double t = (D - A * x - B * y - C * z) / denominator;
+    projX = x + A * t;
+    projY = y + B * t;
+    projZ = z + C * t;
+}
+
+// Функція для знаходження точки перетину прямої з площиною
+bool intersectLineWithPlane(double A, double B, double C, double D, double x1, double y1, double z1, double vx, double vy, double vz, double &intersectionX, double &intersectionY, double &intersectionZ) {
+    double denominator = A * vx + B * vy + C * vz;
+    if (denominator == 0) {
+        return false; // Пряма паралельна площині, немає точки перетину
+    }
+    double t = (D - A * x1 - B * y1 - C * z1) / denominator;
+    intersectionX = x1 + vx * t;
+    intersectionY = y1 + vy * t;
+    intersectionZ = z1 + vz * t;
+    return true;
+}
+
+int main() {
+    double A, B, C, D;
+
+    // Введення коефіцієнтів рівняння площини
+    cout << "Введіть коефіцієнти рівняння площини Ax + By + Cz + D = 0" << endl;
+    cout << "A: ";
+    cin >> A;
+    cout << "B: ";
+    cin >> B;
+    cout << "C: ";
+    cin >> C;
+    cout << "D: ";
+    cin >> D;
+
+    double x, y, z;
+
+    // Введення координат точки для перевірки належності
+    cout << "Введіть координати точки (x, y, z) для перевірки належності до площини:" << endl;
+    cout << "x: ";
+    cin >> x;
+    cout << "y: ";
+    cin >> y;
+    cout << "z: ";
+    cin >> z;
+
+    // Перевірка належності точки до площини
+    bool isPointInPlane = checkPointInPlane(A, B, C, D, x, y, z);
+
+    // Виведення результату на екран
+    if (isPointInPlane) {
+        cout << "Точка належить площині." << endl;
+    } else {
+        cout << "Точка не належить площині." << endl;
+    }
+
+    // Знаходження проекції точки на площину
+    double projX, projY, projZ;
+    projectPointToPlane(A, B, C, D, x, y, z, projX, projY, projZ);
+    cout << "Проекція точки на площину: (" << projX << ", " << projY << ", " << projZ << ")" << endl;
+
+    // Введення координат точки та напрямного вектора прямої для знаходження точки перетину
+    double x1, y1, z1, vx, vy, vz;
+
+    cout << "Введіть координати точки на прямій (x1, y1, z1):" << endl;
+    cout << "x1: ";
+    cin >> x1;
+    cout << "y1: ";
+    cin >> y1;
+    cout << "z1: ";
+    cin >> z1;
+
+    cout << "Введіть координати напрямного вектора прямої (vx, vy, vz):" << endl;
+    cout << "vx: ";
+    cin >> vx;
+    cout << "vy: ";
+    cin >> vy;
+    cout << "vz: ";
+    cin >> vz;
+
+    // Знаходження точки перетину прямої з площиною
+    double intersectionX, intersectionY, intersectionZ;
+    bool hasIntersection = intersectLineWithPlane(A, B, C, D, x1, y1, z1, vx, vy, vz, intersectionX, intersectionY, intersectionZ);
+
+    // Виведення результату знаходження точки перетину на екран
+    if (hasIntersection) {
+        cout << "Точка перетину прямої з площиною: (" << intersectionX << ", " << intersectionY << ", " << intersectionZ << ")" << endl;
+    } else {
+        cout << "Пряма паралельна площині, немає точки перетину." << endl;
+    }
+
+    return 0;
+}
+
