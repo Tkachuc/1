@@ -1,1 +1,85 @@
+#include <iostream>
+#include <cmath>
+
+class PlaneEquation {
+private:
+    double coefficients[4];  // Коефіцієнти рівняння Ax + By + Cz + D = 0
+
+public:
+    // Конструктор за замовчуванням, ініціалізує коефіцієнти нулями
+    PlaneEquation() {
+        for (int i = 0; i < 4; i++) {
+            coefficients[i] = 0.0;
+        }
+    }
+
+    // Опис індексатора для доступу до коефіцієнтів рівняння
+    double& operator[](int index) {
+        if (index >= 0 && index < 4) {
+            return coefficients[index];
+        } else {
+            std::cerr << "Помилка: Неприпустимий індекс." << std::endl;
+            exit(1);
+        }
+    }
+
+    // Метод для введення коефіцієнтів рівняння
+    void inputCoefficients() {
+        std::cout << "Введіть коефіцієнти A, B, C та D через пробіл: ";
+        for (int i = 0; i < 4; i++) {
+            std::cin >> coefficients[i];
+        }
+    }
+
+    // Метод для виведення коефіцієнтів рівняння
+    void displayCoefficients() {
+        std::cout << "Коефіцієнти рівняння площини: ";
+        for (int i = 0; i < 4; i++) {
+            std::cout << coefficients[i] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    // Метод для знаходження точки перетину з осями координат
+    void findIntersectionWithAxes() {
+        double xIntersect = -coefficients[3] / coefficients[0];
+        double yIntersect = -coefficients[3] / coefficients[1];
+        double zIntersect = -coefficients[3] / coefficients[2];
+
+        std::cout << "Точка перетину з осями координат: ";
+        std::cout << "X = " << xIntersect << ", Y = " << yIntersect << ", Z = " << zIntersect << std::endl;
+    }
+
+    // Метод для перевірки належності точки площині
+    bool isPointOnPlane(double x, double y, double z) {
+        double result = coefficients[0] * x + coefficients[1] * y + coefficients[2] * z + coefficients[3];
+        return fabs(result) < 1e-6;  // Використовуємо точність double
+    }
+};
+
+int main() {
+    PlaneEquation plane;
+
+    // Введення коефіцієнтів рівняння
+    plane.inputCoefficients();
+
+    // Виведення коефіцієнтів рівняння
+    plane.displayCoefficients();
+
+    // Знаходження точки перетину з осями координат
+    plane.findIntersectionWithAxes();
+
+    // Перевірка належності точки площині
+    double x, y, z;
+    std::cout << "Введіть координати точки для перевірки (x y z): ";
+    std::cin >> x >> y >> z;
+
+    if (plane.isPointOnPlane(x, y, z)) {
+        std::cout << "Точка належить площині." << std::endl;
+    } else {
+        std::cout << "Точка НЕ належить площині." << std::endl;
+    }
+
+    return 0;
+}
 
