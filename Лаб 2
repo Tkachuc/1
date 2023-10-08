@@ -1,0 +1,69 @@
+#include <iostream>
+#include <string>
+
+class TBus {
+private:
+    std::string marca;      // Марка автобуса
+    double weight;          // Вага автобуса (без пасажирів та багажу)
+    int numSeats;           // Кількість місць у автобусі
+    int numPassengers;      // Кількість пасажирів у автобусі
+
+public:
+    // Конструктор класу TBus
+    TBus(std::string marca, double weight, int numSeats) {
+        this->marca = marca;
+        this->weight = weight;
+        this->numSeats = numSeats;
+        this->numPassengers = 0;  // По замовчуванню немає пасажирів
+    }
+
+    // Метод для додавання пасажирів
+    void addPassengers(int passengers) {
+        if (numPassengers + passengers <= numSeats) {
+            numPassengers += passengers;
+        }
+        else {
+            std::cout << "Недостатньо вільних місць для " << passengers << " пасажирів." << std::endl;
+        }
+    }
+
+    // Метод для видалення пасажирів
+    void removePassengers(int passengers) {
+        if (numPassengers - passengers >= 0) {
+            numPassengers -= passengers;
+        }
+        else {
+            std::cout << "Неможливо видалити " << passengers << " пасажирів, бо їх кількість менше." << std::endl;
+        }
+    }
+
+    // Метод для визначення наближеної ваги автобуса з пасажирами без багажу
+    double calculateApproximateWeight() const {
+        // Припускаємо, що середня вага пасажира без багажу - 70 кг
+        double passengerWeight = 70.0;
+        return weight + numPassengers * passengerWeight;
+    }
+
+    // Метод для виведення інформації про автобус
+    void printInfo() const {
+        std::cout << "Марка автобуса: " << marca << std::endl;
+        std::cout << "Вага автобуса (без пасажирів та багажу): " << weight << " кг" << std::endl;
+        std::cout << "Кількість місць у автобусі: " << numSeats << std::endl;
+        std::cout << "Кількість пасажирів у автобусі: " << numPassengers << std::endl;
+        std::cout << "Наближена вага автобуса з пасажирами без багажу: " << calculateApproximateWeight() << " кг" << std::endl;
+    }
+};
+
+int main() {
+    // Створення об'єкту автобуса
+    TBus bus("Mercedes", 8000.0, 40);
+
+    // Додавання та видалення пасажирів
+    bus.addPassengers(30);
+    bus.removePassengers(10);
+
+    // Виведення інформації про автобус
+    bus.printInfo();
+
+    return 0;
+}
