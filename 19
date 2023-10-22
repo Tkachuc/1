@@ -1,0 +1,139 @@
+#include <iostream>
+#include <vector>
+
+class Matrix {
+private:
+    std::vector<std::vector<int>> data;
+    int rows;
+    int cols;
+
+public:
+    // Конструктор без параметрів
+    Matrix() : rows(0), cols(0) {}
+
+    // Конструктор з параметрами
+    Matrix(int numRows, int numCols) : rows(numRows), cols(numCols) {
+        data.resize(rows, std::vector<int>(cols, 0));
+    }
+
+    // Конструктор копіювання
+    Matrix(const Matrix& other) : rows(other.rows), cols(other.cols), data(other.data) {}
+
+    // Метод для введення даних
+    void input() {
+        std::cout << "Введіть елементи матриці " << rows << "x" << cols << ":" << std::endl;
+        data.resize(rows, std::vector<int>(cols, 0));
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                std::cin >> data[i][j];
+            }
+        }
+    }
+
+    // Метод для виведення даних
+    void output() {
+        std::cout << "Матриця " << rows << "x" << cols << ":" << std::endl;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                std::cout << data[i][j] << ' ';
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    // Метод для знаходження найбільшого елемента
+    int findMax() {
+        int maxElement = data[0][0];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (data[i][j] > maxElement) {
+                    maxElement = data[i][j];
+                }
+            }
+        }
+        return maxElement;
+    }
+
+    // Метод для знаходження найменшого елемента
+    int findMin() {
+        int minElement = data[0][0];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (data[i][j] < minElement) {
+                    minElement = data[i][j];
+                }
+            }
+        }
+        return minElement;
+    }
+
+    // Метод для знаходження суми елементів
+    int findSum() {
+        int sum = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                sum += data[i][j];
+            }
+        }
+        return sum;
+    }
+
+    // Перевантаження оператора додавання (+)
+    Matrix operator+(const Matrix& other) {
+        if (rows != other.rows || cols != other.cols) {
+            std::cerr << "Помилка: матриці мають різну розмірність." << std::endl;
+            return Matrix();
+        }
+
+        Matrix result(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = data[i][j] + other.data[i][j];
+            }
+        }
+        return result;
+    }
+
+    // Перевантаження оператора віднімання (-)
+    Matrix operator-(const Matrix& other) {
+        if (rows != other.rows || cols != other.cols) {
+            std::cerr << "Помилка: матриці мають різну розмірність." << std::endl;
+            return Matrix();
+        }
+
+        Matrix result(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = data[i][j] - other.data[i][j];
+            }
+        }
+        return result;
+    }
+};
+
+int main() {
+    int rows, cols;
+    std::cout << "Введіть розмірність матриці (рядки і стовпці): ";
+    std::cin >> rows >> cols;
+
+    Matrix matrix1(rows, cols);
+    matrix1.input();
+
+    Matrix matrix2(rows, cols);
+    matrix2.input();
+
+    Matrix sum = matrix1 + matrix2;
+    Matrix diff = matrix1 - matrix2;
+
+    std::cout << "Результат додавання матриць:" << std::endl;
+    sum.output();
+
+    std::cout << "Результат віднімання матриць:" << std::endl;
+    diff.output();
+
+    std::cout << "Найбільший елемент: " << matrix1.findMax() << std::endl;
+    std::cout << "Найменший елемент: " << matrix1.findMin() << std::endl;
+    std::cout << "Сума елементів: " << matrix1.findSum() << std::endl;
+
+    return 0;
+}
